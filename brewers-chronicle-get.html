@@ -1,0 +1,35 @@
+<script type="text/javascript">
+    RED.nodes.registerType('brewers-chronicle-get',{
+        category: 'Brewers Chronicle',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:""},
+            getmethod: {value:""},
+        },
+        inputs:2,
+        outputs:1,
+        icon: "file.png",
+        label: function() {
+            return this.name||"brewers-chronicle-get";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="brewers-chronicle-get">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i>Name</label>
+        <input type="text" id="node-input-name" placeholder="Name" /><br />
+
+        <label for="node-input-getmethod"><i class="fa fa-tag"></i>Reading Type</label>
+        <select id="node-input-getmethod">
+            <option value="">Select get method</option>
+            <option value="BoilSessions">Boil sessions</option>
+            <option value="BoilSessionInfo">Boil session info</option>
+        </select>
+        
+    </div>
+</script>
+
+<script type="text/html" data-help-name="brewers-chronicle-get">
+    <p>A node for feeding information into Brewers Chronicle</p>
+</script>

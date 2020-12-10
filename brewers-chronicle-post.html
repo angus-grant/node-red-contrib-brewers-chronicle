@@ -1,0 +1,54 @@
+<script type="text/javascript">
+    RED.nodes.registerType('brewers-chronicle-post',{
+        category: 'Brewers Chronicle',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:""},
+            readingtype: {value:""},
+            readingvalue: {value:""},
+            readingvaluetype: {value:""},
+        },
+        inputs:3,
+        outputs:1,
+        icon: "file.png",
+        label: function() {
+            return this.name||"brewers-chronicle-post";
+        },
+        oneditprepare: function () {
+            $("#node-input-readingvalue").typedInput({
+                type:"msg",
+                types:["msg", "flow","global"],
+                typeField: "#node-input-readingvaluetype"
+            })
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="brewers-chronicle-post">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i>Name</label>
+        <input type="text" id="node-input-name" placeholder="Name" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-readingtype"><i class="fa fa-tag"></i>Reading Type</label>
+        <select id="node-input-readingtype">
+            <option value="">Select reading type</option>
+            <option value="17">Mash-in temp</option>
+            <option value="13">Mash started</option>
+            <option value="15">Mash step started</option>
+            <option value="16">Mash step ended</option>
+            <option value="18">Target temp</option>
+            <option value="19">Temp</option>
+            <option value="14">Mash completed</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-readingvalue"><i class="fa fa-tag"></i>Reading value</label>
+        <input type="text" id="node-input-readingvalue">
+        <input type="hidden" id="node-input-readingvaluetype">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="brewers-chronicle-post">
+    <p>A node for feeding information into Brewers Chronicle</p>
+</script>
