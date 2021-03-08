@@ -11,8 +11,8 @@ const querystring = require("querystring");
 
 class BrewersChronicleService {
   constructor() {
-    //this.baseUrl = "https://api.brewerschronicle.com/api";
-    this.baseUrl = "http://192.168.0.27:51402/api";
+    this.baseUrl = "https://api.brewerschronicle.com/api";
+    //this.baseUrl = "http://192.168.0.27:51402/api";
   }
 
   setCredentials(apiKey) {
@@ -40,10 +40,10 @@ class BrewersChronicleService {
     var url = this.baseUrl + "/brewLogs/PostReading"; //?" + querystring.stringify(queryParams);
     
     if (readingValue == "") {
-        var json = "{ 'BrewingLogId' : '" + brew_log_id + "', 'DeviceTag' : 'Node-Red Brew3', 'ReadingTypeId' : '" + readingTypeId + "' }";
+        var json = "{ 'BrewingLogId' : '" + brew_log_id + "', 'DeviceTag' : 'Device_Node-Red Brew3', 'ReadingTypeId' : '" + readingTypeId + "' }";
         return await httpService.postWithJson(url, json);
     } else {
-        var json = "{ 'BrewingLogId' : '" + brew_log_id + "', 'ReadingValue' : '" + readingValue + "', 'DeviceTag' : 'Node-Red Brew3', 'ReadingTypeId' : '" + readingTypeId + "' }";
+        var json = "{ 'BrewingLogId' : '" + brew_log_id + "', 'ReadingValue' : '" + readingValue + "', 'DeviceTag' : 'Device_Node-Red Brew3', 'ReadingTypeId' : '" + readingTypeId + "' }";
         return await httpService.postWithJson(url, json);
     }
   }
