@@ -26,14 +26,15 @@ module.exports = function(RED) {
             bcService.setCredentials(bc_apikey);
 
             switch (this.readingtype) {
-                case "6": /* Ferment temp */
-                    var json = "{ 'AssetName' : '" + device_name + "', 'AssetAPIId' : '" + device_name  + "_CurrentTemp', 'ReadingValue' : '" + msg.payload  + "', 'ControlSoftwareName' : 'bc_node_red_device', 'Notes' : '' } ";
-                    msg.payload = await bcService.postFermentSessionReading(json);
-                    break; 
-               case "7": /* Ferment target temp */
+               case "6": /* Ferment target temp */
                     var json = "{ 'AssetName' : '" + device_name + "', 'AssetAPIId' : '" + device_name  + "_TargetTemp', 'ReadingValue' : '" + msg.payload  + "', 'ControlSoftwareName' : 'bc_node_red_device', 'Notes' : '' } ";
                     msg.payload = await bcService.postFermentSessionReading(json);
                     break;
+                case "7": /* Ferment temp */
+                    var json = "{ 'AssetName' : '" + device_name + "', 'AssetAPIId' : '" + device_name  + "_CurrentTemp', 'ReadingValue' : '" + msg.payload  + "', 'ControlSoftwareName' : 'bc_node_red_device', 'Notes' : '' } ";
+                    msg.payload = await bcService.postFermentSessionReading(json);
+                    break;
+
                 case "13": /* Mash started */
                 case "14": /* Mash Ended */
                 case "16": /* Mash step ended */
@@ -48,8 +49,6 @@ module.exports = function(RED) {
 
                     break;
             }
-
-node.log(msg.payload);
 
             send(msg);
             if (done) done();
