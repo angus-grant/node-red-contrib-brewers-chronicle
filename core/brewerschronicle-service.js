@@ -11,8 +11,8 @@ const querystring = require("querystring");
 
 class BrewersChronicleService {
   constructor() {
-    this.baseUrl = "https://api.brewerschronicle.com/api";
-    //this.baseUrl = "http://192.168.0.27:51402/api";
+    //this.baseUrl = "https://api.brewerschronicle.com/api";
+    this.baseUrl = "http://192.168.0.27:51402/api";
   }
 
   setCredentials(apiKey) {
@@ -38,7 +38,7 @@ class BrewersChronicleService {
 
   async postBoilSessionReading(brew_log_id, readingTypeId, readingValue, params = {}) {
     var url = this.baseUrl + "/brewLogs/PostReading"; //?" + querystring.stringify(queryParams);
-    
+
     if (readingValue == "") {
         var json = "{ 'BrewingLogId' : '" + brew_log_id + "', 'DeviceTag' : 'Device_Node-Red Brew3', 'ReadingTypeId' : '" + readingTypeId + "' }";
         return await httpService.postWithJson(url, json);
@@ -48,6 +48,17 @@ class BrewersChronicleService {
     }
   }
 
+  async postFermentSessionReading(json, params = {}) {
+    var url = this.baseUrl + "/fermentLogs/PostReadingByAPIId";
+
+    return await httpService.postWithJson(url, json);
+  }
+
+  async getFermentSessionInfo(json, params = {}) {
+    var url = this.baseUrl + "/fermentLogs/GetFermentLogInfo";
+
+    return await httpService.postWithJson(url, json);
+  }
 }
 const bcService = new BrewersChronicleService();
 module.exports = bcService;

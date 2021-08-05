@@ -7,24 +7,33 @@ https://github.com/enorfelt/node-red-contrib-brewfather/blob/master/core/brewfat
 module.exports = function(RED) {
     "use strict";
     const bcService = require("./core/brewerschronicle-service");
-    
+
     function BrewersChroniclePostReadingNode(config) {
         RED.nodes.createNode(this,config);
-        
+
         this.name = config.name;
         this.readingtype = config.readingtype;
         this.readingvalue = config.readingvalue;
         this.readingvaluetype = config.readingvaluetype;
-        
+
         var node = this;
         node.on("input", async function (msg, send, done) {
             var globalContext = this.context().global;
+            var device_name = globalContext.get("deviceName", "storeInFile");
             var brew_log_id = globalContext.get("selected_batch_id", "storeInFile");
             var bc_apikey = globalContext.get("bc_api_key", "storeInFile");
-            
+
             bcService.setCredentials(bc_apikey);
 
             switch (this.readingtype) {
+                case "6": /* Ferment temp */
+                    var json = "{ 'AssetName' : '" + device_name + "', 'AssetAPIId' : '" + device_name  + "_CurrentTemp', 'ReadingValue' : '" + msg.payload  + "', 'ControlSoftwareName' : 'bc_node_red_device', 'Notes' : '' } ";
+                    msg.payload = await bcService.postFermentSessionReading(json);
+                    break; 
+               case "7": /* Ferment target temp */
+                    var json = "{ 'AssetName' : '" + device_name + "', 'AssetAPIId' : '" + device_name  + "_TargetTemp', 'ReadingValue' : '" + msg.payload  + "', 'ControlSoftwareName' : 'bc_node_red_device', 'Notes' : '' } ";
+                    msg.payload = await bcService.postFermentSessionReading(json);
+                    break;
                 case "13": /* Mash started */
                 case "14": /* Mash Ended */
                 case "16": /* Mash step ended */
@@ -33,25 +42,15 @@ module.exports = function(RED) {
                     break;
                 case "17": /* Mash-in temp */
                 case "15": /* Mash step started */
-                case "18": /* Target temp */
-                case "19": /* Temp */
-                    var outValue;
-                    var promise = new Promise((resolve,reject) => {
-                            RED.util.evaluateNodeProperty(this.readingvalue,this.readingvaluetype,node,msg,(err,value) => {
-                                if (err) {
-                                    reject(err);                                
-                                } else {
-                                    outValue = parseFloat(value.toFixed(1));
-                                    resolve();
-                                }
-                            });                            
-                        });               
-                    
-                    msg.payload = await bcService.postBoilSessionReading(brew_log_id, this.readingtype, outValue);
+                case "18": /* Mash target temp */
+                case "19": /* Mash temp */
+                    msg.payload = await bcService.postBoilSessionReading(brew_log_id, this.readingtype, msg.payload);
 
                     break;
             }
-            
+
+node.log(msg.payload);
+
             send(msg);
             if (done) done();
         });
