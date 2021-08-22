@@ -26,6 +26,10 @@ module.exports = function(RED) {
             bcService.setCredentials(bc_apikey);
 
             switch (this.readingtype) {
+               case "2": /* Ferment gravity */
+                    var json = "{ 'AssetName' : '" + device_name + "', 'AssetAPIId' : '" + device_name  + "_TiltGravity', 'ReadingValue' : '" + msg.payload  + "', 'ControlSoftwareName' : 'bc_node_red_device', 'Notes' : '' } ";
+                    msg.payload = await bcService.postFermentSessionReading(json);
+                    break;
                case "3": /* Ferment target temp */
                     var json = "{ 'AssetName' : '" + device_name + "', 'AssetAPIId' : '" + device_name  + "_TargetTemp', 'ReadingValue' : '" + msg.payload  + "', 'ControlSoftwareName' : 'bc_node_red_device', 'Notes' : '' } ";
                     msg.payload = await bcService.postFermentSessionReading(json);
